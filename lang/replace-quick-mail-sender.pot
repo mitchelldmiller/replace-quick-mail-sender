@@ -1,0 +1,113 @@
+"Project-Id-Version: Replace Quick Mail Sender v0.0.3\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: 2017-08-22 18:01:46+0000\n"
+"Last-Translator: irrelevant <mitchelldmiller@gmail.com>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: CSL v1.x\n"
+"X-Poedit-Language: English\n"
+"X-Poedit-Country: UNITED STATES\n"
+"X-Poedit-SourceCharset: utf-8\n"
+"X-Poedit-KeywordsList: __;_e;__ngettext:1,2;_n:1,2;__ngettext_noop:1,2;_n_noop:1,2;_c,_nc:4c,1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;_nx_noop:4c,1,2;\n"
+"X-Poedit-Basepath: ../\n"
+"X-Poedit-Bookmarks: \n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Textdomain-Support: yes"
+
+#. translators: plugin header field 'Name'
+#: replace-quick-mail-sender.php:0
+#: replace-quick-mail-sender.php:147
+#@ quick-mail-sender
+msgid "Replace Quick Mail Sender"
+msgstr ""
+
+#. translators: plugin header field 'PluginURI'
+#: replace-quick-mail-sender.php:0
+#@ quick-mail-sender
+msgid "https://wheredidmybraingo.com/send-reliable-email-wordpress-quick-mail/"
+msgstr ""
+
+#. translators: plugin header field 'Description'
+#: replace-quick-mail-sender.php:0
+#@ quick-mail-sender
+msgid "Use replace_quick_mail_sender filter to replace Quick Mail name and sender. Does not work if another mail plugin is overriding credentials."
+msgstr ""
+
+#. translators: plugin header field 'Author'
+#: replace-quick-mail-sender.php:0
+#@ quick-mail-sender
+msgid "Mitchell D. Miller"
+msgstr ""
+
+#. translators: plugin header field 'AuthorURI'
+#: replace-quick-mail-sender.php:0
+#@ quick-mail-sender
+msgid "https://wheredidmybraingo.com/"
+msgstr ""
+
+#. translators: plugin header field 'Version'
+#: replace-quick-mail-sender.php:0
+#@ quick-mail-sender
+msgid "0.0.3"
+msgstr ""
+
+#: replace-quick-mail-sender.php:37
+#@ quick-mail-sender
+msgid "Requires Quick Mail plugin."
+msgstr ""
+
+#: replace-quick-mail-sender.php:48
+#@ quick-mail-sender
+msgid "Requires Quick Mail 3.2.0 or later"
+msgstr ""
+
+#: replace-quick-mail-sender.php:72
+#@ quick-mail-sender
+msgid "Quick Mail Sender"
+msgstr ""
+
+#: replace-quick-mail-sender.php:109
+#@ quick-mail-sender
+msgid "Invalid or missing Name"
+msgstr ""
+
+#: replace-quick-mail-sender.php:120
+#@ quick-mail-sender
+msgid "Invalid Email Address"
+msgstr ""
+
+#: replace-quick-mail-sender.php:138
+#@ quick-mail-sender
+msgid "Filter Disabled"
+msgstr ""
+
+#: replace-quick-mail-sender.php:140
+#@ quick-mail-sender
+msgid "Option Updated"
+msgstr ""
+
+#: replace-quick-mail-sender.php:153
+#@ quick-mail-sender
+msgid "Name"
+msgstr ""
+
+#: replace-quick-mail-sender.php:155
+#@ quick-mail-sender
+msgid "Email"
+msgstr ""
+
+#: replace-quick-mail-sender.php:158
+#: replace-quick-mail-sender.php:159
+#@ quick-mail-sender
+msgid "Update"
+msgstr ""
+
+#: replace-quick-mail-sender.php:163
+#@ quick-mail-sender
+msgid "You are not authorized to use this plugin."
+msgstr ""
+

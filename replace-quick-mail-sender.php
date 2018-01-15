@@ -2,10 +2,10 @@
 /**
  Plugin Name:  Replace Quick Mail Sender
  Description:  Use replace_quick_mail_sender filter to replace Quick Mail name and sender. Does not work if another mail plugin is overriding credentials.
- Version:      0.0.3
+ Version:      0.1.0
  Author:       Mitchell D. Miller
  Author URI:   https://wheredidmybraingo.com/
- Plugin URI:   https://wheredidmybraingo.com/send-reliable-email-wordpress-quick-mail/
+ Plugin URI:   https://wheredidmybraingo.com/send-reliable-email-wordpress-quick-mail/#replace_sender
  Text Domain:  quick-mail-sender
  Domain Path:  /lang
  License:      GPLv3
@@ -24,6 +24,7 @@ class ReplaceQuickMailSender {
 		add_action( 'activated_plugin', array($this, 'install_quick_mail_filters'), 10, 0);
 		add_action( 'admin_menu', array($this, 'init_quick_mail_sender_menu') );
 		add_action( 'plugins_loaded', array($this, 'init_quick_mail_translation') );
+		add_filter( 'plugin_row_meta', array($this, 'qm_plugin_links'), 10, 2 );
 	} // end constructor
 
 	/**
@@ -51,7 +52,7 @@ class ReplaceQuickMailSender {
 
 		$uid = get_current_user_id();
 		if ( $uid != get_user_meta( $uid, 'qmf_quick_mail_user', true ) ) {
-			$qm_options = array('qmf_quick_mail_user' => $uid, 'qmf_quick_mail_email' => '', 'qmf_quick_mail_name' => '');
+			$qm_options = array('qmf_quick_mail_user' => $uid, 'qmf_quick_mail_email' => '', 'qmf_quick_mail_name' => '', 'qmf_quick_mail_reply_to' => '');
 			foreach ($qm_options as $k => $v) {
 				update_user_meta( $uid, $k, $v );
 			} // end foreach
@@ -64,6 +65,23 @@ class ReplaceQuickMailSender {
 	public function init_quick_mail_translation() {
 		load_plugin_textdomain( 'quick-mail-sender', false, basename( dirname( __FILE__ ) ) . '/lang' );
 	} // end init_quick_mail_translation
+
+	/**
+	 * add helpful links to plugin description. filters plugin_row_meta.
+	 *
+	 * @param array $links
+	 * @param string $file
+	 * @return array
+	 *
+	 * @since 0.1.0
+	 */
+	public function qm_plugin_links( $links, $file ) {
+		$base = plugin_basename( __FILE__ );
+		if ( $file == $base ) {
+			$links[] = '<a href="https://github.com/mitchelldmiller/replace-quick-mail-sender" target="_blank">' . __( 'Github', 'quick-mail-sender' ) . '</a>';
+		} // end if adding links
+		return $links;
+	} // end qm_plugin_links
 
 	/**
 	 * init admin menu for appropriate users.
@@ -101,6 +119,8 @@ class ReplaceQuickMailSender {
 		$showform = ( $uid == get_user_meta( $uid, 'qmf_quick_mail_user', true ) );
 		$email = $showform ? get_user_meta( $uid, 'qmf_quick_mail_email', true ) : '';
 		$name = $showform ? get_user_meta( $uid, 'qmf_quick_mail_name', true ) : '';
+		$reply_to = $showform ? get_user_meta( $uid, 'qmf_quick_mail_reply_to', true ) : '';
+
 		if ( $showform && 'POST' == $_SERVER['REQUEST_METHOD'] ) {
 			if ( empty( self::$qm_dir ) ) {
 				$qm = QuickMail::get_instance();
@@ -125,6 +145,17 @@ class ReplaceQuickMailSender {
 				$message = __( 'Invalid Email Address', 'quick-mail-sender' );
 			} // end if invalid email
 
+			$rmail = empty($_POST['qmf_quick_mail_reply_to']) ? '' : sanitize_email( trim( $_POST['qmf_quick_mail_reply_to'] ) );
+			$verify_domain = '';
+			if ( is_multisite() ) {
+				$verify_domain = get_blog_option( get_current_blog_id(), 'verify_quick_mail_addresses', 'N' );
+			} else {
+				$verify_domain = get_option( 'verify_quick_mail_addresses', 'N' );
+			} // end if multisite
+			if ( empty( $message ) && !empty( $umail ) && !QuickMailUtil::qm_valid_email_domain( $rmail, $verify_domain ) ) {
+				$message = __( 'Invalid Email Address', 'quick-mail-sender' );
+			} // end if invalid email
+
 			if ( empty( $message) ) {
 				$updated = false;
 				if ( $uname != $name ) {
@@ -138,6 +169,12 @@ class ReplaceQuickMailSender {
 					$email = $umail;
 					$updated = true;
 				} // end if updated email
+
+				if ( $rmail != $reply_to ) {
+					update_user_meta( $uid, 'qmf_quick_mail_reply_to', $rmail );
+					$reply_to = $rmail;
+					$updated = true;
+				} // end if updated reply to
 
 				if ( ( empty( $email ) || empty( $name ) ) && $updated) {
 					echo '<div role="alert" class="updated"><p>', _e( 'Filter Disabled', 'quick-mail-sender' ), '</p></div>';
@@ -159,6 +196,8 @@ class ReplaceQuickMailSender {
 		<p><input type="text" aria-labelledby="te_label" size="64" maxlength="80" value="<?php echo $name; ?>" name="qmf_quick_mail_name" id="qmf_quick_mail_name" tabindex="1"></p>
 		<label id="tn_label" for="qmf_quick_mail_email" class="recipients"><?php _e( 'Email', 'quick-mail-sender' ); ?></label>
 		<p><input type="email" aria-labelledby="tn_label" size="64" maxlength="255" value="<?php echo $email; ?>" name="qmf_quick_mail_email" id="qmf_quick_mail_email" tabindex="2"></p>
+		<label id="tr_label" for="qmf_quick_mail_reply_to" class="recipients"><?php _e( 'Reply to', 'quick-mail-sender' ); ?></label>
+		<p><input type="email" aria-labelledby="tr_label" size="64" maxlength="255" value="<?php echo $reply_to; ?>" name="qmf_quick_mail_reply_to" id="qmf_quick_mail_reply_to" tabindex="10"></p>
 <p class="submit"><input type="submit" id="qm-submit" name="qm-submit"
 title="<?php _e( 'Update', 'quick-mail-sender' ); ?>" tabindex="99"
 value="<?php _e( 'Update', 'quick-mail-sender' ); ?>"></p>
@@ -175,15 +214,16 @@ value="<?php _e( 'Update', 'quick-mail-sender' ); ?>"></p>
 	/**
 	 * replace quick mail sender.
 	 * @param array $args $args['email'] = email, $args['name'] = name
-	 * @return array modified name, email
+	 * @return array modified name, email, reply_to
 	 */
 	public function replace_quick_mail_sender( $args ) {
 		$uid = get_current_user_id();
 		if ($uid == get_user_meta( $uid, 'qmf_quick_mail_user', true ) ) {
 			$email = get_user_meta( $uid, 'qmf_quick_mail_email', true );
-			$name = get_user_meta ($uid, 'qmf_quick_mail_name', true );
+			$name = get_user_meta($uid, 'qmf_quick_mail_name', true );
+			$rmail = get_user_meta( $uid, 'qmf_quick_mail_reply_to', true );
 			if ( !empty( $email ) && !empty( $name ) ) {
-				return array('email' => $email, 'name' => $name);
+				return array('email' => $email, 'name' => $name, 'reply_to' => $rmail);
 			} // end if got name and email
 		} // end if same user is checking
 

@@ -1,21 +1,20 @@
 Replace Quick Mail Sender
 ====================
 
-WordPress Plugin to replace user sender name and address in Quick Mail plugin.
+WordPress Plugin to replace user sender name, email address, reply to address in Quick Mail plugin.
 
 Description
 -----------
 
 ![screenshot](screenshot.png)
 
-
-Implements filter for current user to replace their sending name and address.
+Implements filter for current user to replace their sending name, email address, reply to address.
 
 Requires Administrator capabilities and [Quick Mail plugin](https://github.com/mitchelldmiller/quick-mail-wp-plugin) 3.2.0 or later.
 
 __Features__
 
-* Includes `replace_quick_mail_sender` filter, and form to change sending name and address with it. 
+* Includes `replace_quick_mail_sender` filter, and form to change sending name and addresses with it. 
 
 ### Learn More
 

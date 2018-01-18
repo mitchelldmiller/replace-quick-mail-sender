@@ -32,7 +32,7 @@ __Features__
 
 __Who can use this plugin?__
 
-* User must be an Administrator. Site must have Quick Mail plugin active.
+* User must be able to publish posts. Site must have Quick Mail plugin active.
 
 __How to Disable Filter__
 

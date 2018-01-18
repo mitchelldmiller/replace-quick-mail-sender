@@ -1,8 +1,8 @@
 <?php
 /**
  Plugin Name:  Replace Quick Mail Sender
- Description:  Use replace_quick_mail_sender filter to replace Quick Mail name and sender. Does not work if another mail plugin is overriding credentials.
- Version:      0.1.0
+ Description:  Use replace_quick_mail_sender filter to replace Quick Mail name and sender. Does not work if a mail plugin defined constants for credentials.
+ Version:      0.1.4
  Author:       Mitchell D. Miller
  Author URI:   https://wheredidmybraingo.com/
  Plugin URI:   https://wheredidmybraingo.com/send-reliable-email-wordpress-quick-mail/#replace_sender
@@ -21,7 +21,7 @@ class ReplaceQuickMailSender {
 		} // end if not WordPress
 
 		add_filter( 'replace_quick_mail_sender', array($this, 'replace_quick_mail_sender') );
-		add_action( 'activated_plugin', array($this, 'install_quick_mail_filters'), 10, 0);
+		add_action( 'wp_loaded', array($this, 'install_replacement_values'), 10, 0);
 		add_action( 'admin_menu', array($this, 'init_quick_mail_sender_menu') );
 		add_action( 'plugins_loaded', array($this, 'init_quick_mail_translation') );
 		add_filter( 'plugin_row_meta', array($this, 'qm_plugin_links'), 10, 2 );
@@ -31,7 +31,7 @@ class ReplaceQuickMailSender {
 	 * install Quick Mail filter. requires Quick Mail Plugin >= 3.2.0
 	 *
 	 */
-	public function install_quick_mail_filters() {
+	public function install_replacement_values() {
 		if ( !class_exists( 'QuickMail' ) ) {
 			deactivate_plugins( basename( __FILE__ ) );
 			echo sprintf("<div class='notice notice-error' role='alert'>%s</div>",
@@ -57,7 +57,7 @@ class ReplaceQuickMailSender {
 				update_user_meta( $uid, $k, $v );
 			} // end foreach
 		} // end if not same user who installed plugin
-	} // install_quick_mail_filters
+	} // install_replacement_values
 
 	/**
 	 * load translations.
@@ -88,7 +88,8 @@ class ReplaceQuickMailSender {
 	 */
 	public function init_quick_mail_sender_menu() {
 		$title = __( 'Quick Mail Sender', 'quick-mail-sender' );
-		$min_permission = 'activate_plugins';
+		// $min_permission = 'activate_plugins';
+		$min_permission = 'publish_posts';
 		$link = 'edit_quick_mail_sender';
 		$page = add_options_page( $title, $title, $min_permission, $link, array($this, $link) );
 		add_action( 'admin_print_styles-' . $page, array($this, 'init_quick_mail_style') );
@@ -152,7 +153,7 @@ class ReplaceQuickMailSender {
 			} else {
 				$verify_domain = get_option( 'verify_quick_mail_addresses', 'N' );
 			} // end if multisite
-			if ( empty( $message ) && !empty( $umail ) && !QuickMailUtil::qm_valid_email_domain( $rmail, $verify_domain ) ) {
+			if ( empty( $message ) && !empty( $rmail ) && !QuickMailUtil::qm_valid_email_domain( $rmail, $verify_domain ) ) {
 				$message = __( 'Invalid Email Address', 'quick-mail-sender' );
 			} // end if invalid email
 
@@ -170,9 +171,20 @@ class ReplaceQuickMailSender {
 					$updated = true;
 				} // end if updated email
 
-				if ( $rmail != $reply_to ) {
-					update_user_meta( $uid, 'qmf_quick_mail_reply_to', $rmail );
+				if ( empty( $rmail ) && !empty( $reply_to ) ) {
 					$reply_to = $rmail;
+					update_user_meta( $uid, 'qmf_quick_mail_reply_to', $rmail );
+					$updated = true;
+				} else {
+					if ( $rmail != $reply_to || ( !empty( $name ) && !strstr( $rmail, '<' ) ) ) {
+						$reply_to = empty( $rmail ) ? $reply_to : "{$name} <{$rmail}>";
+					} else {
+						$reply_to = $rmail;
+					}
+				} // end if cleared reply_to
+
+				if (!empty($rmail) && $rmail != $reply_to) {
+					update_user_meta( $uid, 'qmf_quick_mail_reply_to', $rmail );
 					$updated = true;
 				} // end if updated reply to
 
@@ -197,14 +209,14 @@ class ReplaceQuickMailSender {
 		<label id="tn_label" for="qmf_quick_mail_email" class="recipients"><?php _e( 'Email', 'quick-mail-sender' ); ?></label>
 		<p><input type="email" aria-labelledby="tn_label" size="64" maxlength="255" value="<?php echo $email; ?>" name="qmf_quick_mail_email" id="qmf_quick_mail_email" tabindex="2"></p>
 		<label id="tr_label" for="qmf_quick_mail_reply_to" class="recipients"><?php _e( 'Reply to', 'quick-mail-sender' ); ?></label>
-		<p><input type="email" aria-labelledby="tr_label" size="64" maxlength="255" value="<?php echo $reply_to; ?>" name="qmf_quick_mail_reply_to" id="qmf_quick_mail_reply_to" tabindex="10"></p>
+		<p><input type="text" aria-labelledby="tr_label" size="64" maxlength="255" value="<?php echo $reply_to; ?>" name="qmf_quick_mail_reply_to" id="qmf_quick_mail_reply_to" tabindex="10"></p>
 <p class="submit"><input type="submit" id="qm-submit" name="qm-submit"
 title="<?php _e( 'Update', 'quick-mail-sender' ); ?>" tabindex="99"
 value="<?php _e( 'Update', 'quick-mail-sender' ); ?>"></p>
 		</fieldset>
 		</form>
 		<?php else : ?>
-		<p><?php _e( 'You are not authorized to use this plugin.', 'quick-mail-sender' ); ?></p>
+		<h2><?php _e( 'You are not authorized to use this plugin.', 'quick-mail-sender' ); ?></h2>
 		<?php endif; ?>
 	</div>
 </div>
@@ -213,21 +225,29 @@ value="<?php _e( 'Update', 'quick-mail-sender' ); ?>"></p>
 
 	/**
 	 * replace quick mail sender.
-	 * @param array $args $args['email'] = email, $args['name'] = name
-	 * @return array modified name, email, reply_to
+	 * @param array $args 'email', 'name', 'reply_to', 'defined'
+	 * @return array modified name, email, reply_to, defined
+	 * @todo defined will be used to test mail service for constants.
 	 */
 	public function replace_quick_mail_sender( $args ) {
+		$all_args = array('email' => '', 'name' => '', 'reply_to' => '', 'defined' => false);
+		foreach ($args as $k => $v) {
+			$all_args[$k] = $v;
+		} // end foreach
+
 		$uid = get_current_user_id();
 		if ($uid == get_user_meta( $uid, 'qmf_quick_mail_user', true ) ) {
 			$email = get_user_meta( $uid, 'qmf_quick_mail_email', true );
 			$name = get_user_meta($uid, 'qmf_quick_mail_name', true );
 			$rmail = get_user_meta( $uid, 'qmf_quick_mail_reply_to', true );
 			if ( !empty( $email ) && !empty( $name ) ) {
-				return array('email' => $email, 'name' => $name, 'reply_to' => $rmail);
+				$all_args['email'] = $email;
+				$all_args['name'] = $name;
+				$all_args['reply_to'] = $rmail;
 			} // end if got name and email
 		} // end if same user is checking
 
-		return $args;
+		return $all_args;
 	} // end replace_quick_mail_sender
 } // end class
 new ReplaceQuickMailSender;

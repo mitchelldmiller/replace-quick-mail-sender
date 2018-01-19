@@ -1,8 +1,8 @@
-"Project-Id-Version: Replace Quick Mail Sender v0.0.3\n"
+"Project-Id-Version: Replace Quick Mail Sender v0.1.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-08-22 18:01:46+0000\n"
-"Last-Translator: irrelevant <mitchelldmiller@gmail.com>\n"
+"PO-Revision-Date: 2018-01-18 20:18:22+0000\n"
+"Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -10,7 +10,7 @@
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: CSL v1.x\n"
 "X-Poedit-Language: English\n"
-"X-Poedit-Country: UNITED STATES\n"
+"X-Poedit-Country: USA \n"
 "X-Poedit-SourceCharset: utf-8\n"
 "X-Poedit-KeywordsList: __;_e;__ngettext:1,2;_n:1,2;__ngettext_noop:1,2;_n_noop:1,2;_c,_nc:4c,1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;_nx_noop:4c,1,2;\n"
 "X-Poedit-Basepath: ../\n"
@@ -20,21 +20,9 @@
 
 #. translators: plugin header field 'Name'
 #: replace-quick-mail-sender.php:0
-#: replace-quick-mail-sender.php:147
+#: replace-quick-mail-sender.php:201
 #@ quick-mail-sender
 msgid "Replace Quick Mail Sender"
-msgstr ""
-
-#. translators: plugin header field 'PluginURI'
-#: replace-quick-mail-sender.php:0
-#@ quick-mail-sender
-msgid "https://wheredidmybraingo.com/send-reliable-email-wordpress-quick-mail/"
-msgstr ""
-
-#. translators: plugin header field 'Description'
-#: replace-quick-mail-sender.php:0
-#@ quick-mail-sender
-msgid "Use replace_quick_mail_sender filter to replace Quick Mail name and sender. Does not work if another mail plugin is overriding credentials."
 msgstr ""
 
 #. translators: plugin header field 'Author'
@@ -49,65 +37,89 @@ msgstr ""
 msgid "https://wheredidmybraingo.com/"
 msgstr ""
 
-#. translators: plugin header field 'Version'
-#: replace-quick-mail-sender.php:0
-#@ quick-mail-sender
-msgid "0.0.3"
-msgstr ""
-
-#: replace-quick-mail-sender.php:37
+#: replace-quick-mail-sender.php:38
+#: replace-quick-mail-sender.php:104
 #@ quick-mail-sender
 msgid "Requires Quick Mail plugin."
 msgstr ""
 
-#: replace-quick-mail-sender.php:48
+#: replace-quick-mail-sender.php:49
 #@ quick-mail-sender
 msgid "Requires Quick Mail 3.2.0 or later"
 msgstr ""
 
-#: replace-quick-mail-sender.php:72
+#: replace-quick-mail-sender.php:90
 #@ quick-mail-sender
 msgid "Quick Mail Sender"
 msgstr ""
 
-#: replace-quick-mail-sender.php:109
+#: replace-quick-mail-sender.php:135
 #@ quick-mail-sender
 msgid "Invalid or missing Name"
 msgstr ""
 
-#: replace-quick-mail-sender.php:120
+#: replace-quick-mail-sender.php:146
+#: replace-quick-mail-sender.php:157
 #@ quick-mail-sender
 msgid "Invalid Email Address"
 msgstr ""
 
-#: replace-quick-mail-sender.php:138
+#: replace-quick-mail-sender.php:192
 #@ quick-mail-sender
 msgid "Filter Disabled"
 msgstr ""
 
-#: replace-quick-mail-sender.php:140
+#: replace-quick-mail-sender.php:194
 #@ quick-mail-sender
 msgid "Option Updated"
 msgstr ""
 
-#: replace-quick-mail-sender.php:153
+#: replace-quick-mail-sender.php:207
 #@ quick-mail-sender
 msgid "Name"
 msgstr ""
 
-#: replace-quick-mail-sender.php:155
+#: replace-quick-mail-sender.php:209
 #@ quick-mail-sender
 msgid "Email"
 msgstr ""
 
-#: replace-quick-mail-sender.php:158
-#: replace-quick-mail-sender.php:159
+#: replace-quick-mail-sender.php:211
+#@ quick-mail-sender
+msgid "Reply to"
+msgstr ""
+
+#: replace-quick-mail-sender.php:214
+#: replace-quick-mail-sender.php:215
 #@ quick-mail-sender
 msgid "Update"
 msgstr ""
 
-#: replace-quick-mail-sender.php:163
+#: replace-quick-mail-sender.php:219
 #@ quick-mail-sender
 msgid "You are not authorized to use this plugin."
+msgstr ""
+
+#. translators: plugin header field 'PluginURI'
+#: replace-quick-mail-sender.php:0
+#@ quick-mail-sender
+msgid "https://wheredidmybraingo.com/send-reliable-email-wordpress-quick-mail/#replace_sender"
+msgstr ""
+
+#. translators: plugin header field 'Description'
+#: replace-quick-mail-sender.php:0
+#@ quick-mail-sender
+msgid "Use replace_quick_mail_sender filter to replace Quick Mail name and sender. Does not work if a mail plugin defined constants for credentials."
+msgstr ""
+
+#. translators: plugin header field 'Version'
+#: replace-quick-mail-sender.php:0
+#@ quick-mail-sender
+msgid "0.1.4"
+msgstr ""
+
+#: replace-quick-mail-sender.php:81
+#@ quick-mail-sender
+msgid "Github"
 msgstr ""
 

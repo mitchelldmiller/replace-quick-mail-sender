@@ -10,7 +10,7 @@ Description
 
 Implements filter for current user to replace their sending name, email address, reply to address.
 
-[Quick Mail plugin](https://github.com/mitchelldmiller/quick-mail-wp-plugin) 3.5.0 or later.
+Requires [Quick Mail plugin](https://github.com/mitchelldmiller/quick-mail-wp-plugin) 3.5.0 or later.
 
 __Features__
 

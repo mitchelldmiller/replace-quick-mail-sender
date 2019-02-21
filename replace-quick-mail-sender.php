@@ -221,21 +221,10 @@ class ReplaceQuickMailSender {
 					$updated = true;
 				} // end if updated email
 
-				if ( empty( $rmail ) && ! empty( $reply_to ) ) {
+				if ( $rmail !== $reply_to ) {
+					update_user_meta( $uid, 'qmf_quick_mail_reply_to', $rmail );
+					$updated  = true;
 					$reply_to = $rmail;
-					update_user_meta( $uid, 'qmf_quick_mail_reply_to', $rmail );
-					$updated = true;
-				} else {
-					if ( $rmail !== $reply_to || ( ! empty( $name ) && ! strstr( $rmail, '<' ) ) ) {
-						$reply_to = empty( $rmail ) ? $reply_to : "{$name} <{$rmail}>";
-					} else {
-						$reply_to = $rmail;
-					}
-				} // end if cleared reply_to
-
-				if ( ! empty( $rmail ) && $rmail !== $reply_to ) {
-					update_user_meta( $uid, 'qmf_quick_mail_reply_to', $rmail );
-					$updated = true;
 				} // end if updated reply to
 
 				if ( ( empty( $email ) || empty( $name ) ) && $updated ) {

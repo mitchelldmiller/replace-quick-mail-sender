@@ -10,7 +10,7 @@ Description
 
 Implements filter for current user to replace their sending name, email address, reply to address.
 
-Requires [Quick Mail plugin](https://github.com/mitchelldmiller/quick-mail-wp-plugin) 3.5.0 or later.
+Requires [Quick Mail plugin](https://github.com/mitchelldmiller/quick-mail-wp-plugin) 4.0.5 or later.
 
 __Features__
 
@@ -22,11 +22,20 @@ __Features__
 
 ### Installation ###
 
+**Legacy **
+
 * Download [the latest release](https://github.com/mitchelldmiller/replace-quick-mail-sender/releases/latest) and unpack in your `/wp-content/plugins/` directory.
 
-* Verify that Quick Mail plugin is activated.
+* Verify that the Quick Mail plugin is activated.
 
 * Activate the plugin through the WordPress 'Plugins' menu.
+
+** Automated **
+
+* Install [GitHub Updater](https://github.com/afragen/github-updater/releases/latest) plugin to install plugin from Github.
+
+* See [GitHub Updater Wiki](https://github.com/afragen/github-updater/wiki) for additional information.
+
 
 ### Frequently Asked Questions ###
 
@@ -58,4 +67,4 @@ __Translators and Programmers__
 
 __License__
 
-This plugin is free for personal or commercial use. 
+This plugin is free for personal or commercial use. Encourage future development with a [donation](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=4AAGBFXRAPFJY).

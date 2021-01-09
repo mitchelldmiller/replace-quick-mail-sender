@@ -3,10 +3,11 @@
  *
  Plugin Name: Replace Quick Mail Sender
  Description: Use replace_quick_mail_sender filter to replace Quick Mail name and sender. Does not work if a mail plugin defined constants for credentials.
- Version: 0.1.5
+ Version: 0.2.0
  Author: Mitchell D. Miller
- Author URI: https://wheredidmybraingo.com/
+ Author URI: https://mitchelldmiller.com/
  Plugin URI: https://wheredidmybraingo.com/send-reliable-email-wordpress-quick-mail/#replace_sender
+ GitHub Plugin URI: https://github.com/mitchelldmiller/replace-quick-mail-sender
  Text Domain: quick-mail-sender
  Domain Path: /lang
  License: GPLv3
@@ -52,31 +53,31 @@ class ReplaceQuickMailSender {
 			if ( ! class_exists( 'QuickMail' ) ) {
 				deactivate_plugins( basename( __FILE__ ) );
 				$text      = __( 'Requires Quick Mail plugin.', 'quick-mail-sender' );
-				$html      = sprintf( "<div class='notice notice-error' role='alert'>%s</div>", $text );
+				$message      = sprintf( "<div class='notice notice-error' role='alert'>%s</div>", $text );
 				$direction = is_rtl() ? 'rtl' : 'ltr';
+				$title          = __( 'Error', 'quick-mail-sender' );
 				$args      = array(
 					'response'       => 200,
 					'back_link'      => true,
 					'text_direction' => $direction,
 				);
-				wp_die( $text, $html, $args );
+				wp_die( $message, $title, $args );
 			} // end if no quick mail
 
-			$qm            = QuickMail::get_instance();
-			self::$qm_dir  = empty( $qm->directory ) ? '/' : $qm->directory;
+			self::$qm_dir = QuickMail::DIRECTORY;
 			self::$qm_util = self::$qm_dir . 'inc/class-quickmailutil.php';
-			unset( $qm );
 			if ( ! file_exists( self::$qm_util ) ) {
 				deactivate_plugins( basename( __FILE__ ) );
-				$text      = __( 'Requires Quick Mail 3.5.0 or later', 'quick-mail-sender' );
-				$html      = sprintf( "<div class='notice notice-error' role='alert'>%s</div>", $text );
+				$text      = __( 'Requires Quick Mail 4.0.5 or later', 'quick-mail-sender' );
+				$message      = sprintf( "<div class='notice notice-error' role='alert'>%s</div>", $text );
 				$direction = is_rtl() ? 'rtl' : 'ltr';
+				$title          = __( 'Error', 'quick-mail-sender' );
 				$args      = array(
 					'response'       => 200,
 					'back_link'      => true,
 					'text_direction' => $direction,
 				);
-				wp_die( $html, $title, $args );
+				wp_die( $message, $title, $args );
 			} // end if
 		} // end if
 	} // end load_qm_paths
@@ -164,14 +165,15 @@ class ReplaceQuickMailSender {
 		$saved_uid = get_user_meta( $uid, 'qmf_quick_mail_user', true );
 		if ( $uid !== intval( $saved_uid ) ) {
 			$text      = esc_html_e( 'You are not authorized to use this plugin.', 'quick-mail-sender' );
-			$html      = sprintf( "<div class='notice notice-error' role='alert'>%s</div>", $text );
+			$message      = sprintf( "<div class='notice notice-error' role='alert'>%s</div>", $text );
 			$direction = is_rtl() ? 'rtl' : 'ltr';
+			$title          = __( 'Not Authorized', 'quick-mail-sender' );
 			$args      = array(
 				'response'       => 200,
 				'back_link'      => true,
 				'text_direction' => $direction,
 			);
-			wp_die( $text, $html, $args );
+			wp_die( $message, $title, $args );
 		} // end if wrong user.
 
 		$email    = get_user_meta( $uid, 'qmf_quick_mail_email', true );
@@ -263,7 +265,6 @@ value="<?php esc_html_e( 'Update', 'quick-mail-sender' ); ?>"></p>
 	 *
 	 * @param array $args 'email', 'name', 'reply_to', 'defined'.
 	 * @return array modified name, email, reply_to, defined
-	 * @todo defined will be used to test mail service for constants.
 	 */
 	public function replace_quick_mail_sender( $args ) {
 		$all_args = array(
